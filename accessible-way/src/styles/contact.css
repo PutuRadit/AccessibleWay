@@ -1,0 +1,87 @@
+.contact { padding-block: 96px; scroll-margin-top: 24px; }
+.contact__layout { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: start; gap: 40px; }
+.contact__info { grid-column: span 5; display: flex; flex-direction: column; justify-content: space-between; gap: 42px; min-width: 0; min-height: 584px; }
+.contact__copy { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.contact__badge { display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px; border-radius: 999px; background: #e6eeff; color: #0060a8; font-size: 14px; font-weight: 600; line-height: 18px; letter-spacing: .28px; }
+.contact__badge img, .contact__topic-icon img, .contact__submit img { flex: none; }
+.contact__heading { color: var(--color-heading); font-family: var(--font-heading); font-size: 32px; line-height: 40px; letter-spacing: -.8px; }
+.contact__intro { padding-top: 4px; color: var(--color-text); font-size: 16px; line-height: 24px; }
+.contact__topics { display: grid; gap: 16px; min-width: 0; margin-top: 32px; padding: 0; border: 0; }
+.contact__topic { position: relative; display: block; min-width: 0; cursor: pointer; }
+.contact__topic-input, .contact__sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.contact__tile { display: flex; align-items: center; gap: 16px; min-height: 80px; padding: 15px; border: 1px solid transparent; border-radius: 12px; background: #fff; box-shadow: 0 1px 2px rgb(0 0 0 / 5%); transition: border-color .25s ease, box-shadow .25s ease, background .25s ease; }
+.contact__topic-input:checked + .contact__tile { border-color: #b7d3f7; background: #f6faff; }
+.contact__topic-input:focus-visible + .contact__tile { outline: 3px solid #0060a8; outline-offset: 4px; }
+.contact__topic-icon { display: grid; place-items: center; flex: none; width: 48px; height: 48px; border-radius: 12px; background: #e6eeff; }
+.contact__topic-copy { display: grid; gap: 0; min-width: 0; }
+.contact__topic-title { color: var(--color-text); font-size: 12px; font-weight: 600; line-height: 16px; letter-spacing: .36px; }
+.contact__topic-description { color: var(--color-heading); font-family: var(--font-heading); font-size: 18px; font-weight: 700; line-height: 26px; }
+.contact__info-note { display: grid; gap: 10px; color: var(--color-text); font-size: 14px; line-height: 20px; }
+.contact__direct-email { width: fit-content; max-width: 100%; color: var(--color-primary); font-weight: 600; overflow-wrap: anywhere; text-decoration: underline; text-underline-offset: 4px; }
+.contact__panel { grid-column: span 7; min-width: 0; padding: 40px; border-radius: 24px; background: #fff; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 10%), 0 8px 10px -6px rgb(0 0 0 / 10%); }
+.contact__form-heading { color: var(--color-heading); font-family: var(--font-heading); font-size: 20px; line-height: 28px; }
+.contact__form-intro { margin-top: 8px; color: var(--color-text); font-size: 14px; line-height: 20px; }
+.contact__form { display: grid; gap: 16px; margin-top: 24px; }
+.contact__fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 16px; }
+.contact__field { display: grid; gap: 8px; min-width: 0; }
+.contact__field label { color: #071c33; font-size: 14px; font-weight: 600; line-height: 18px; letter-spacing: .15px; }
+.contact__optional { color: #667184; font-size: 11px; font-weight: 400; letter-spacing: 0; }
+.contact__field input, .contact__field textarea { display: block; width: 100%; min-width: 0; min-height: 52px; padding: 15px; border: 1px solid transparent; border-radius: 12px; background: var(--color-secondary); color: var(--color-text); font-size: 16px; line-height: 20px; transition: border-color .2s ease, box-shadow .2s ease; }
+.contact__field input::placeholder, .contact__field textarea::placeholder { color: #667184; opacity: 1; }
+.contact__field textarea { min-height: 128px; resize: vertical; line-height: 24px; }
+.contact__field input:focus-visible, .contact__field textarea:focus-visible { border-color: var(--color-primary); outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.contact__field [aria-invalid="true"] { border-color: #b32934; background: #fff5f6; }
+.contact__error { color: #a8202c; font-size: 12px; line-height: 18px; }
+.contact__message-meta { display: flex; justify-content: space-between; gap: 12px; min-height: 18px; }
+[data-contact-count] { margin-left: auto; flex: none; color: #667184; font-size: 11px; line-height: 18px; }
+.contact__form-status { padding: 10px 12px; border: 1px solid #f0c4c8; border-radius: 8px; background: #fff5f6; color: #a8202c; font-size: 13px; line-height: 20px; }
+.contact__submit { display: inline-flex; justify-content: center; align-items: center; gap: 8px; width: 100%; min-height: 52px; padding: 14px 24px; border: 0; border-radius: 12px; background: var(--color-primary); color: #fff; font-size: 16px; font-weight: 600; line-height: 22px; letter-spacing: .16px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -2px rgb(0 0 0 / 10%); transition: background .25s ease, box-shadow .25s ease, translate .25s ease; }
+.contact__form-note { color: #667184; font-size: 11px; line-height: 18px; text-align: center; }
+.contact__review { width: min(640px, calc(100% - 32px)); max-height: calc(100dvh - 48px); margin: auto; padding: 32px; overflow: auto; border: 1px solid #e3ebf8; border-radius: 24px; background: #fff; color: var(--color-text); box-shadow: 0 28px 80px rgb(0 31 61 / 25%); }
+.contact__review::backdrop { background: rgb(0 31 61 / 55%); }
+.contact__review-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 12px; }
+.contact__review-header h2 { color: var(--color-heading); font-family: var(--font-heading); font-size: 24px; line-height: 1.4; letter-spacing: -.5px; }
+.contact__close { display: grid; place-items: center; flex: none; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 50%; background: var(--color-secondary); color: var(--color-heading); font-size: 26px; line-height: 1; }
+.contact__review > p { font-size: 14px; line-height: 1.7; }
+.contact__draft { display: block; width: 100%; margin-block: 20px 14px; padding: 16px; border: 1px solid #dce8fa; border-radius: 12px; background: #f6f9ff; color: var(--color-text); font-size: 14px; line-height: 1.8; resize: vertical; }
+.contact__review .contact__delivery-note { color: #596779; font-size: 12px; }
+.contact__review-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+.contact__review-actions button, .contact__review-actions a { display: inline-flex; justify-content: center; align-items: center; min-height: 44px; padding: 10px 16px; border: 1px solid #dce8fa; border-radius: 10px; color: var(--color-heading); background: var(--color-secondary); font-size: 13px; font-weight: 600; line-height: 20px; }
+.contact__review-actions .contact__copy-button, .contact__review-actions .contact__email-button { border-color: var(--color-primary); color: #fff; background: var(--color-primary); }
+.contact__copy-status { min-height: 20px; margin-top: 12px; color: var(--color-primary); }
+
+@media (hover: hover) and (pointer: fine) {
+  .contact__topic:hover .contact__tile { border-color: #a9c9ee; box-shadow: 0 8px 20px -14px rgb(0 55 105 / 35%); }
+  .contact__submit:hover { background: var(--color-heading); box-shadow: 0 7px 14px -5px rgb(0 55 105 / 35%); }
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .contact__submit:hover { translate: 0 -2px; }
+}
+@media (max-width: 1100px) {
+  .contact__layout { gap: 24px; }
+  .contact__panel { padding: 32px; }
+  .contact__topic-description { font-size: 16px; }
+}
+@media (max-width: 979px) {
+  .contact { padding-block: 64px; }
+  .contact__layout { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .contact__info, .contact__panel { grid-column: auto; }
+  .contact__info { min-height: 0; gap: 24px; }
+  .contact__topics { margin-top: 24px; }
+  .contact__copy { max-width: 640px; }
+}
+@media (max-width: 639px) {
+  .contact { padding-block: 48px; }
+  .contact__heading { font-size: 28px; line-height: 36px; letter-spacing: -.6px; }
+  .contact__badge { font-size: 13px; }
+  .contact__intro { font-size: 15px; line-height: 25px; }
+  .contact__tile { gap: 12px; }
+  .contact__topic-description { font-size: 16px; }
+  .contact__panel { padding: 28px 20px; border-radius: 20px; }
+  .contact__form-heading { font-size: 19px; line-height: 28px; }
+  .contact__fields { grid-template-columns: minmax(0, 1fr); }
+  .contact__info-note { font-size: 13px; }
+  .contact__review { padding: 24px 20px; border-radius: 20px; }
+  .contact__review-header h2 { font-size: 20px; }
+  .contact__review-actions > * { width: 100%; }
+}

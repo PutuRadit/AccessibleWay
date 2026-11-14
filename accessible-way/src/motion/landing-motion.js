@@ -9,6 +9,17 @@ export function initLandingMotion(root) {
     { trigger: ".hiw__intro", targets: ".hiw__heading, .hiw__subtitle", y: 58, blur: 4, stagger: .15 },
     { trigger: ".hiw__tabs", targets: ".hiw__tabs", y: 42, blur: 0 },
     { trigger: ".hiw__stage", targets: ".hiw__stage", y: 76, blur: 0, duration: 1.05 },
+    { trigger: ".about__copy", targets: ".about__badge, .about__heading, .about__body, .about__scope", y: 42, x: -18, blur: 4, stagger: .1 },
+    { trigger: ".about__showcase", targets: ".about__showcase", y: 44, x: 28, blur: 0, duration: 1 },
+    { trigger: ".about__story", targets: ".about__story-card", y: 40, blur: 0, stagger: .12 },
+    { trigger: ".about__features-header", targets: ".about__features-header", y: 36, blur: 0 },
+    { trigger: ".about__feature-grid", targets: ".about__feature", y: 40, blur: 0, stagger: .1 },
+    { trigger: ".about__team-header", targets: ".about__team-header", y: 36, blur: 0 },
+    { trigger: ".about__team", targets: ".about__member", y: 36, blur: 0, stagger: .12 },
+    { trigger: ".contact__copy", targets: ".contact__badge, .contact__heading, .contact__intro", y: 40, x: -18, blur: 4, stagger: .1 },
+    { trigger: ".contact__topics", targets: ".contact__topic", y: 36, blur: 0, stagger: .1 },
+    { trigger: ".contact__info-note", targets: ".contact__info-note", y: 24, blur: 0 },
+    { trigger: ".contact__panel", targets: ".contact__panel", y: 44, blur: 0, duration: 1 },
   ];
 
   media.add("(prefers-reduced-motion: no-preference)", () => {
@@ -46,7 +57,8 @@ export function initLandingMotion(root) {
         if (!record) continue;
         if (entry.isIntersecting && entry.intersectionRatio >= .12 && !record.revealed) {
           reveal(entry.target, record);
-        } else if (!entry.isIntersecting && record.revealed) {
+        } else if (!entry.isIntersecting && record.revealed &&
+          !record.targets.some(target => target.contains(document.activeElement))) {
           record.revealed = false;
           record.timeline?.kill();
           gsap.set(record.targets, record.from);

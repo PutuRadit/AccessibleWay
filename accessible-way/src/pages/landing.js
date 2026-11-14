@@ -1,6 +1,12 @@
+import "../styles/landing.css";
+import "../styles/how-it-works.css";
+import "../styles/about.css";
+import "../styles/contact.css";
 import { renderNavbar, initNavbar } from "../components/navbar.js";
 import { renderHero, initHero } from "../components/hero.js";
 import { renderHowItWorks, initHowItWorks } from "../components/how-it-works.js";
+import { renderAbout } from "../components/about.js";
+import { renderContact, initContact } from "../components/contact.js";
 import { initLandingMotion } from "../motion/landing-motion.js";
 
 export function renderLanding() {
@@ -9,6 +15,8 @@ export function renderLanding() {
     <main class="landing-main" id="main-content" tabindex="-1">
       ${renderHero()}
       ${renderHowItWorks()}
+      ${renderAbout()}
+      ${renderContact()}
     </main>
   `;
 }
@@ -17,11 +25,13 @@ export function initLanding(root) {
   const disposeNavbar = initNavbar(root);
   const disposeHero = initHero(root);
   const disposeHowItWorks = initHowItWorks(root);
+  const disposeContact = initContact(root);
   const disposeMotion = initLandingMotion(root);
   return () => {
     disposeNavbar();
     disposeHero();
     disposeHowItWorks();
+    disposeContact();
     disposeMotion();
   };
 }

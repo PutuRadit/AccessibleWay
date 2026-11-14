@@ -32,8 +32,8 @@ export function renderNavbar() {
             <span class="navbar__indicator" aria-hidden="true"></span>${links}
           </nav>
           <div class="navbar__actions">
-            <a class="navbar__auth navbar__auth--primary" href="${baseUrl}login">Sign In</a>
-            <a class="navbar__auth navbar__auth--secondary" href="${baseUrl}register">Register</a>
+            <a class="navbar__auth navbar__auth--primary" href="${baseUrl}login/">Sign In</a>
+            <a class="navbar__auth navbar__auth--secondary" href="${baseUrl}register/">Register</a>
           </div>
         </div>
       </div>

@@ -6,6 +6,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: fileURLToPath(new URL("./index.html", import.meta.url)),
+        login: fileURLToPath(new URL("./login/index.html", import.meta.url)),
+        register: fileURLToPath(new URL("./register/index.html", import.meta.url)),
         cityPreview: fileURLToPath(new URL("./city-preview.html", import.meta.url)),
       },
     },
