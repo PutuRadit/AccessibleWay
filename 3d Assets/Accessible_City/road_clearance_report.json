@@ -1,0 +1,414 @@
+{
+  "kept": [
+    {
+      "kind": "tree",
+      "x": -8.7,
+      "y": 5.1,
+      "clearance": 0.12,
+      "radius": 0.1
+    },
+    {
+      "kind": "tree",
+      "x": -5.5,
+      "y": 5.0,
+      "clearance": 0.12,
+      "radius": 0.11000000000000001
+    },
+    {
+      "kind": "tree",
+      "x": 2.4,
+      "y": 4.9,
+      "clearance": 0.12,
+      "radius": 0.10500000000000001
+    },
+    {
+      "kind": "tree",
+      "x": 8.55,
+      "y": 4.9,
+      "clearance": 0.12,
+      "radius": 0.085
+    },
+    {
+      "kind": "tree",
+      "x": -8.65,
+      "y": 0.85,
+      "clearance": 0.12,
+      "radius": 0.07500000000000001
+    },
+    {
+      "kind": "tree",
+      "x": -2.65,
+      "y": 1.0,
+      "clearance": 0.12,
+      "radius": 0.09000000000000001
+    },
+    {
+      "kind": "tree",
+      "x": 3.17,
+      "y": 0.7,
+      "clearance": 0.12,
+      "radius": 0.085
+    },
+    {
+      "kind": "tree",
+      "x": 8.58,
+      "y": 0.7,
+      "clearance": 0.12,
+      "radius": 0.08000000000000002
+    },
+    {
+      "kind": "tree",
+      "x": 0.05,
+      "y": -2.3,
+      "clearance": 0.12,
+      "radius": 0.11499999999999999
+    },
+    {
+      "kind": "tree",
+      "x": -1.6,
+      "y": -2.15,
+      "clearance": 0.12,
+      "radius": 0.06999999999999999
+    },
+    {
+      "kind": "tree",
+      "x": 2.45,
+      "y": -4.18,
+      "clearance": 0.12,
+      "radius": 0.073
+    },
+    {
+      "kind": "tree",
+      "x": -11.75,
+      "y": -3.8,
+      "clearance": 0.12,
+      "radius": 0.06999999999999999
+    },
+    {
+      "kind": "tree",
+      "x": 11.72,
+      "y": -3.5,
+      "clearance": 0.12,
+      "radius": 0.072
+    },
+    {
+      "kind": "shrub",
+      "x": -8.2,
+      "y": -6.06,
+      "clearance": 0.12,
+      "width": 0.96,
+      "depth": 0.6
+    },
+    {
+      "kind": "shrub",
+      "x": -5.55,
+      "y": -5.95,
+      "clearance": 0.12,
+      "width": 0.96,
+      "depth": 0.6
+    },
+    {
+      "kind": "shrub",
+      "x": 4.15,
+      "y": -2.95,
+      "clearance": 0.12,
+      "width": 0.96,
+      "depth": 0.6
+    },
+    {
+      "kind": "shrub",
+      "x": 4.1,
+      "y": -0.55,
+      "clearance": 0.12,
+      "width": 0.96,
+      "depth": 0.6
+    },
+    {
+      "kind": "shrub",
+      "x": 8.5,
+      "y": -5.4,
+      "clearance": 0.12,
+      "width": 0.96,
+      "depth": 0.6
+    },
+    {
+      "kind": "shrub",
+      "x": 5.4,
+      "y": -5.9,
+      "clearance": 0.12,
+      "width": 0.96,
+      "depth": 0.6
+    },
+    {
+      "kind": "shrub",
+      "x": 8.6,
+      "y": 1.3,
+      "clearance": 0.12,
+      "width": 0.96,
+      "depth": 0.6
+    },
+    {
+      "kind": "shrub",
+      "x": 2.9,
+      "y": 1.1,
+      "clearance": 0.12,
+      "width": 0.96,
+      "depth": 0.6
+    },
+    {
+      "kind": "shrub",
+      "x": -2.9,
+      "y": 4.9,
+      "clearance": 0.12,
+      "width": 0.96,
+      "depth": 0.6
+    },
+    {
+      "kind": "shrub",
+      "x": -2.7,
+      "y": -4.45,
+      "clearance": 0.12,
+      "width": 0.96,
+      "depth": 0.6
+    },
+    {
+      "kind": "shrub",
+      "x": -2.7,
+      "y": -1.6,
+      "clearance": 0.12,
+      "width": 0.96,
+      "depth": 0.6
+    },
+    {
+      "kind": "shrub",
+      "x": -2.9,
+      "y": -9.96,
+      "clearance": 0.12,
+      "width": 0.96,
+      "depth": 0.6
+    },
+    {
+      "kind": "shrub",
+      "x": 5.0,
+      "y": -9.93,
+      "clearance": 0.12,
+      "width": 0.96,
+      "depth": 0.6
+    },
+    {
+      "kind": "flower_bed",
+      "x": -1.35,
+      "y": -4.3,
+      "clearance": 0.12,
+      "width": 1.55,
+      "depth": 0.6599999999999999
+    },
+    {
+      "kind": "flower_bed",
+      "x": 0.3,
+      "y": -4.5,
+      "clearance": 0.12,
+      "width": 1.55,
+      "depth": 0.6599999999999999
+    },
+    {
+      "kind": "flower_bed",
+      "x": 2.1,
+      "y": -1.6,
+      "clearance": 0.12,
+      "width": 1.1,
+      "depth": 0.6599999999999999
+    },
+    {
+      "kind": "flower_bed",
+      "x": -2.1,
+      "y": -1.6,
+      "clearance": 0.12,
+      "width": 1.1,
+      "depth": 0.6599999999999999
+    },
+    {
+      "kind": "flower_bed",
+      "x": 4.0,
+      "y": 1.0,
+      "clearance": 0.12,
+      "width": 1.2,
+      "depth": 0.6599999999999999
+    },
+    {
+      "kind": "flower_bed",
+      "x": 8.5,
+      "y": 1.25,
+      "clearance": 0.12,
+      "width": 1.1,
+      "depth": 0.6599999999999999
+    },
+    {
+      "kind": "flower_bed",
+      "x": -2.65,
+      "y": 1.1,
+      "clearance": 0.12,
+      "width": 1.2,
+      "depth": 0.6599999999999999
+    },
+    {
+      "kind": "flower_bed",
+      "x": -4.8,
+      "y": -9.95,
+      "clearance": 0.12,
+      "width": 1.6,
+      "depth": 0.6599999999999999
+    },
+    {
+      "kind": "flower_bed",
+      "x": 3.7,
+      "y": -9.97,
+      "clearance": 0.12,
+      "width": 1.6,
+      "depth": 0.6599999999999999
+    },
+    {
+      "kind": "flower_bed",
+      "x": 7.5,
+      "y": -9.6,
+      "clearance": 0.12,
+      "width": 1.3,
+      "depth": 0.6599999999999999
+    },
+    {
+      "kind": "street_lamp",
+      "x": -8.85,
+      "y": -3.5,
+      "clearance": 0.12,
+      "radius": 0.2
+    },
+    {
+      "kind": "street_lamp",
+      "x": -3.45,
+      "y": -3.45,
+      "clearance": 0.12,
+      "radius": 0.2
+    },
+    {
+      "kind": "street_lamp",
+      "x": 3.65,
+      "y": -5.72,
+      "clearance": 0.12,
+      "radius": 0.2
+    },
+    {
+      "kind": "street_lamp",
+      "x": 8.65,
+      "y": -0.8,
+      "clearance": 0.12,
+      "radius": 0.2
+    }
+  ],
+  "removed": [
+    {
+      "kind": "tree",
+      "x": -10.5,
+      "y": 6.7,
+      "clearance": 0.12,
+      "radius": 0.083
+    },
+    {
+      "kind": "tree",
+      "x": 10.6,
+      "y": 6.6,
+      "clearance": 0.12,
+      "radius": 0.085
+    },
+    {
+      "kind": "tree",
+      "x": -11.65,
+      "y": 3.75,
+      "clearance": 0.12,
+      "radius": 0.06999999999999999
+    },
+    {
+      "kind": "shrub",
+      "x": -8.7,
+      "y": -5.8,
+      "clearance": 0.12,
+      "width": 0.96,
+      "depth": 0.6
+    },
+    {
+      "kind": "shrub",
+      "x": -8.8,
+      "y": 1.8,
+      "clearance": 0.12,
+      "width": 0.96,
+      "depth": 0.6
+    },
+    {
+      "kind": "shrub",
+      "x": -9.9,
+      "y": -8.1,
+      "clearance": 0.12,
+      "width": 0.96,
+      "depth": 0.6
+    },
+    {
+      "kind": "shrub",
+      "x": 9.8,
+      "y": -8.45,
+      "clearance": 0.12,
+      "width": 0.96,
+      "depth": 0.6
+    },
+    {
+      "kind": "shrub",
+      "x": 7.4,
+      "y": -9.2,
+      "clearance": 0.12,
+      "width": 0.96,
+      "depth": 0.6
+    },
+    {
+      "kind": "shrub",
+      "x": -8.5,
+      "y": 7.2,
+      "clearance": 0.12,
+      "width": 0.96,
+      "depth": 0.6
+    },
+    {
+      "kind": "flower_bed",
+      "x": -8.8,
+      "y": -5.4,
+      "clearance": 0.12,
+      "width": 1.1,
+      "depth": 0.6599999999999999
+    },
+    {
+      "kind": "street_lamp",
+      "x": -10.9,
+      "y": 4.9,
+      "clearance": 0.12,
+      "radius": 0.2
+    },
+    {
+      "kind": "street_lamp",
+      "x": 10.93,
+      "y": 4.9,
+      "clearance": 0.12,
+      "radius": 0.2
+    },
+    {
+      "kind": "street_lamp",
+      "x": -8.55,
+      "y": -9.1,
+      "clearance": 0.12,
+      "radius": 0.2
+    },
+    {
+      "kind": "street_lamp",
+      "x": 7.95,
+      "y": -9.3,
+      "clearance": 0.12,
+      "radius": 0.2
+    }
+  ]
+}

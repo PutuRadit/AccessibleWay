@@ -1,0 +1,28 @@
+{
+  "name": "Accessible Way \u2014 Inclusive City",
+  "duration_seconds": 24,
+  "fps": 24,
+  "buildings": 10,
+  "residents": 12,
+  "wheelchair_users": 2,
+  "walker_users": 1,
+  "vehicles": 5,
+  "camera_blender": [
+    25.0,
+    -34.0,
+    31.0
+  ],
+  "target_blender": [
+    0,
+    -0.3,
+    1.9
+  ],
+  "orthographic_width": 32.8,
+  "original_geometry": true,
+  "skinned_character_rigs": true,
+  "road_obstacles_removed": 14,
+  "files": {
+    "blend": "Accessible_Way_City_Master.blend",
+    "glb": "Accessible_Way_City_Animated.glb"
+  }
+}
