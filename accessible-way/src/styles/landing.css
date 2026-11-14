@@ -249,37 +249,20 @@
   height: 100%;
 }
 .hero-city-picture { position: absolute; inset: 0; display: block; }
-.hero-city-poster {
+.hero-city-poster,
+.hero-city-video {
   position: absolute;
-  top: 0;
-  left: 65%;
+  inset: 0;
   display: block;
-  width: auto;
+  width: 100%;
   max-width: none;
   height: 100%;
-  transform: translateX(-65%);
+  object-fit: cover;
+  object-position: 65% center;
 }
 .hero-city-host { position: absolute; inset: 0; visibility: hidden; }
-.hero-city-host .city-canvas { display: block; width: 100%; height: 100%; }
 .hero-city-ready .hero-city-host { visibility: visible; }
 .hero-city-ready .hero-city-poster { opacity: 0; }
-.hero-city-status,
-.hero-city-retry {
-  position: absolute;
-  z-index: 2;
-  padding: 10px 12px;
-  border: 1px solid rgb(22 78 138 / 10%);
-  border-radius: 10px;
-  color: var(--color-heading);
-  background: rgb(255 255 255 / 94%);
-  box-shadow: 0 2px 8px rgb(22 78 138 / 8%);
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 20px;
-}
-.hero-city-status { right: var(--page-gutter); bottom: 16px; }
-.hero-city-retry { right: var(--page-gutter); bottom: 16px; min-height: 44px; pointer-events: auto; }
-.hero-city-retry:hover { background: #fff; }
 
 @media (max-width: 979px) {
   .navbar__inner { display: flex; justify-content: space-between; }
@@ -327,9 +310,9 @@
   .hero__grid { min-height: 1050px; align-items: start; }
   .hero__copy { padding-block: 48px; }
   .hero__heading { font-size: 44px; }
-  .hero-visual { inset: auto auto 12px -12.5%; width: 125%; height: auto; aspect-ratio: 4 / 3; }
-  .hero-city-poster { inset: 0; width: 100%; height: 100%; object-fit: contain; transform: none; }
-  .hero-city-status, .hero-city-retry { right: calc(10% + var(--page-gutter)); }
+  .hero-visual { inset: auto 0 12px; width: 100%; height: auto; aspect-ratio: 4 / 3; }
+  .hero-city-poster, .hero-city-video { object-position: center; }
+  .hero-city-picture, .hero-city-host { mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 90%, transparent); }
   .hero::before { background: linear-gradient(180deg, #f8f9ff 0%, rgb(248 249 255 / 98%) 30%, rgb(248 249 255 / 60%) 48%, transparent 65%); }
   .hero::after { content: none; }
 }

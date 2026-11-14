@@ -33,15 +33,17 @@ export function renderHero() {
           <div class="hero-visual__card">
             <div class="hero-visual__viewport">
               <picture class="hero-city-picture">
-                <source media="(max-width: 979px)" srcset="${assetBase}/images/accessible-city-poster.png" />
+                <source media="(max-width: 979px)" srcset="${assetBase}/images/hero-city-mobile-hd.webp" />
                 <img class="hero-city-poster"
-                     src="${assetBase}/images/accessible-city-hero-background.png"
+                     src="${assetBase}/images/hero-city-desktop-hd.webp"
                      alt="Kota inklusif dengan rumah, toko, taman, pejalan kaki, pengguna kursi roda, dan kendaraan."
-                     width="1920" height="1000" fetchpriority="high" decoding="async" />
+                     width="2560" height="1080" fetchpriority="high" decoding="async" />
               </picture>
-              <div class="hero-city-host"></div>
-              <span class="hero-city-status" role="status">Memuat kota…</span>
-              <button class="hero-city-retry" type="button" hidden>Coba tampilan 3D</button>
+              <div class="hero-city-host" role="img" aria-label="Animasi kota inklusif dengan pejalan kaki, pengguna kursi roda, dan kendaraan.">
+                <video class="hero-city-video" width="2560" height="1080"
+                       muted loop playsinline preload="metadata" aria-hidden="true"
+                       disablepictureinpicture disableremoteplayback></video>
+              </div>
             </div>
           </div>
         </div>
@@ -51,75 +53,121 @@ export function renderHero() {
 }
 
 export function initHero(root) {
-  return initCityHero(root);
+  return initCityVideo(root);
 }
 
-function initCityHero(root) {
+function initCityVideo(root) {
   const viewport = root.querySelector(".hero-visual__viewport");
-  const host = root.querySelector(".hero-city-host");
+  const video = root.querySelector(".hero-city-video");
   const poster = root.querySelector(".hero-city-poster");
-  const status = root.querySelector(".hero-city-status");
-  const retry = root.querySelector(".hero-city-retry");
+  const compact = matchMedia("(max-width: 979px)");
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const events = new AbortController();
-  let controller, loading = false, disposed = false, inView = false;
+  const listen = (target, type, callback) => target.addEventListener(type, callback, { signal: events.signal });
+  let disposed = false, inView = false;
+  let blocked = false, failed = false, source = "", restoreTime = null, generation = 0, playPromise = null;
 
-  function showPoster() {
+  function motionAllowed() {
+    return !reducedMotion.matches && !navigator.connection?.saveData;
+  }
+
+  function shouldPlay() {
+    return !disposed && inView && !document.hidden && motionAllowed() && !blocked && !failed;
+  }
+
+  function updatePlaybackState() {
+    viewport.dataset.playback = shouldPlay() && !video.paused ? "playing" : "paused";
+  }
+
+  function showFrame() {
+    if (disposed || blocked || failed || video.readyState < 2 || video.seeking || restoreTime !== null) return;
+    viewport.classList.add("hero-city-ready");
+    poster.setAttribute("aria-hidden", "true");
+  }
+
+  function selectSource() {
+    const next = compact.matches ? "mobile" : "desktop";
+    if (source === next) return;
+    const currentTime = restoreTime ?? (video.currentTime || 0);
+    generation++;
+    playPromise = null;
+    video.pause();
+    source = next;
+    restoreTime = currentTime;
     viewport.classList.remove("hero-city-ready");
     poster.removeAttribute("aria-hidden");
-    status.hidden = true;
-    retry.hidden = false;
+    video.src = `${assetBase}/videos/hero-city-${next}-hd.mp4`;
+    video.load();
   }
 
-  async function load() {
-    if (loading || controller || disposed) return;
-    loading = true;
-    status.hidden = false;
-    retry.hidden = true;
-    try {
-      const { mountCityScene } = await import("../scenes/city-scene.js");
-      if (disposed) return;
-      controller = mountCityScene(host, {
-        paused: reducedMotion.matches,
-        layout: "hero",
-        playbackRate: 0.5,
-        onError() {
-          showPoster();
-          controller?.destroy();
-          controller = null;
-        },
+  function syncPlayback() {
+    if (disposed) return;
+    if (!shouldPlay()) {
+      video.pause();
+      updatePlaybackState();
+      return;
+    }
+    selectSource();
+    if (video.paused && !playPromise) {
+      const token = generation;
+      playPromise = video.play().catch(error => {
+        if (!disposed && token === generation && error.name !== "AbortError" && shouldPlay()) {
+          blocked = true;
+          video.pause();
+          viewport.classList.remove("hero-city-ready");
+          poster.removeAttribute("aria-hidden");
+          updatePlaybackState();
+        }
+      }).finally(() => {
+        if (token !== generation) return;
+        playPromise = null;
+        if (shouldPlay() && video.paused) syncPlayback();
       });
-      controller.setVisible(inView);
-      await controller.ready;
-      if (disposed) { controller?.destroy(); return; }
-      viewport.classList.add("hero-city-ready");
-      poster.setAttribute("aria-hidden", "true");
-      status.hidden = true;
-    } catch {
-      controller?.destroy();
-      controller = null;
-      if (!disposed) showPoster();
-    } finally { loading = false; }
+    }
+    updatePlaybackState();
   }
 
-  retry.addEventListener("click", load, { signal: events.signal });
-  function onReducedMotion(event) { controller?.setPaused(event.matches); }
-  reducedMotion.addEventListener("change", onReducedMotion);
+  video.muted = true;
+  listen(video, "loadedmetadata", () => {
+    if (restoreTime === null) return;
+    const time = Number.isFinite(video.duration) && video.duration > 0 ? restoreTime % video.duration : 0;
+    restoreTime = null;
+    if (time > 0) video.currentTime = time;
+    showFrame();
+  });
+  for (const event of ["loadeddata", "seeked", "playing"]) listen(video, event, () => { showFrame(); updatePlaybackState(); });
+  listen(video, "pause", updatePlaybackState);
+  listen(video, "error", () => {
+    if (disposed) return;
+    failed = true;
+    video.pause();
+    viewport.classList.remove("hero-city-ready");
+    poster.removeAttribute("aria-hidden");
+    updatePlaybackState();
+  });
+  listen(compact, "change", () => {
+    // Only the layout breakpoint changes the file. Scroll/resize keeps its playback time.
+    if (source) selectSource();
+    syncPlayback();
+  });
+  listen(reducedMotion, "change", syncPlayback);
+  listen(document, "visibilitychange", syncPlayback);
+  if (navigator.connection?.addEventListener) listen(navigator.connection, "change", syncPlayback);
   const observer = new IntersectionObserver(([entry]) => {
     inView = entry.isIntersecting;
-    controller?.setVisible(inView);
-    if (inView && !controller) {
-      if (navigator.connection?.saveData) showPoster();
-      else load();
-    }
-  }, { rootMargin: "80px" });
+    syncPlayback();
+  }, { rootMargin: "0px" });
   observer.observe(viewport);
+  updatePlaybackState();
 
   return () => {
+    if (disposed) return;
     disposed = true;
+    generation++;
     events.abort();
     observer.disconnect();
-    reducedMotion.removeEventListener("change", onReducedMotion);
-    controller?.destroy();
+    video.pause();
+    video.removeAttribute("src");
+    video.load();
   };
 }

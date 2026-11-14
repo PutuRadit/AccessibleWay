@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { freezeCityTransforms } from "./city-optimization.js";
 
 const defaultModel = `${import.meta.env.BASE_URL}assets/models/accessible-city-animated.glb`;
 const description = "Miniatur kota inklusif dengan rumah, toko, gedung, taman, pejalan kaki, pengguna kursi roda, dan kendaraan.";
@@ -7,9 +8,15 @@ const description = "Miniatur kota inklusif dengan rumah, toko, gedung, taman, p
 /** One renderer for this Hero; GLB contains the complete 24-second animation. */
 export function mountCityScene(host, options = {}) {
   const playbackRate = options.playbackRate ?? 0.5;
+  const optimized = options.optimize ?? options.layout === "hero";
   const compact = matchMedia("(max-width: 640px)").matches || navigator.hardwareConcurrency <= 4;
-  const renderer = new THREE.WebGLRenderer({ antialias: !compact, alpha: false, powerPreference: "low-power" });
-  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, compact ? 1 : 1.25));
+  const renderer = new THREE.WebGLRenderer({ antialias: options.antialias ?? (!optimized && !compact), alpha: false, powerPreference: optimized ? "default" : "low-power" });
+  const maximumRatio = options.maxPixelRatio ?? (optimized ? 1 : compact ? 1 : 1.25);
+  const pixelBudget = options.pixelBudget ?? (optimized ? compact ? 650000 : 1000000 : Infinity);
+  const targetFps = options.targetFps ?? (optimized && !compact ? 30 : 24);
+  const frameInterval = 1000 / targetFps;
+  let qualityScale = 1;
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, maximumRatio));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.12;
@@ -44,7 +51,10 @@ export function mountCityScene(host, options = {}) {
   fill.position.set(16, 10, -7);
   scene.add(fill);
 
-  let model, mixer, raf = 0, lastFrame = 0, destroyed = false;
+  let model, mixer, raf = 0, lastFrame = 0, lastAnimationFrame = 0, destroyed = false;
+  let renderedFrames = 0, needsRender = true, scrolling = false, scrollTimer = 0;
+  let performanceFrames = 0, performanceElapsed = 0;
+  let geometryStats = null;
   let paused = options.paused ?? matchMedia("(prefers-reduced-motion: reduce)").matches;
   let visible = true;
   let failed = false;
@@ -52,27 +62,47 @@ export function mountCityScene(host, options = {}) {
   let clips = [];
   const abort = new AbortController();
 
-  function render() {
-    if (model && !destroyed && !failed) renderer.render(scene, camera);
+  function render(force = false) {
+    if (!model || destroyed || failed || !visible || document.hidden || (!force && !needsRender) || (scrolling && renderedFrames > 0 && !force)) return;
+    renderer.render(scene, camera);
+    renderedFrames++;
+    needsRender = false;
   }
 
   function cancelFrame() {
     cancelAnimationFrame(raf);
     raf = 0;
     lastFrame = 0;
+    lastAnimationFrame = 0;
+    performanceFrames = 0;
+    performanceElapsed = 0;
   }
 
   function tick(now) {
-    if (destroyed || failed || paused || !visible || document.hidden || !mixer) {
+    if (destroyed || failed || paused || scrolling || !visible || document.hidden || !mixer) {
       cancelFrame();
       return;
     }
-    if (!lastFrame) lastFrame = now;
-    const delta = (now - lastFrame) / 1000;
-    if (delta >= 1 / 24) {
+    if (!lastFrame) lastFrame = lastAnimationFrame = now;
+    const elapsed = now - lastFrame;
+    if (elapsed >= frameInterval) {
+      const delta = (now - lastAnimationFrame) / 1000;
       mixer.update(Math.min(delta, .12));
+      needsRender = true;
       render();
-      lastFrame = now;
+      lastAnimationFrame = now;
+      // Carry the fractional frame interval instead of dropping it every frame.
+      lastFrame = now - elapsed % frameInterval;
+      if (optimized && options.adaptiveQuality !== false) {
+        performanceFrames++; performanceElapsed += delta * 1000;
+        if (performanceFrames >= 45) {
+          if (performanceElapsed / performanceFrames > frameInterval * 1.45 && qualityScale > .55) {
+            qualityScale = Math.max(.55, qualityScale - .15);
+            resize();
+          }
+          performanceFrames = 0; performanceElapsed = 0;
+        }
+      }
     }
     raf = requestAnimationFrame(tick);
   }
@@ -80,7 +110,7 @@ export function mountCityScene(host, options = {}) {
   function syncPlayback() {
     cancelFrame();
     render();
-    if (mixer && !paused && visible && !document.hidden && !destroyed && !failed) {
+    if (mixer && !paused && !scrolling && visible && !document.hidden && !destroyed && !failed) {
       raf = requestAnimationFrame(tick);
     }
   }
@@ -90,6 +120,7 @@ export function mountCityScene(host, options = {}) {
     const { width, height } = host.getBoundingClientRect();
     if (width < 1 || height < 1) return;
     const aspect = width / height;
+    const ratio = Math.max(.5, Math.min(devicePixelRatio || 1, maximumRatio, Math.sqrt(pixelBudget / (width * height))) * qualityScale);
     const immersive = options.layout === "hero" && matchMedia("(min-width: 980px)").matches && aspect >= 1.25;
     const halfHeight = immersive ? 9.3 : Math.max(32.8 / 2 / (4 / 3), 32.8 / 2 / aspect);
     const halfWidth = halfHeight * aspect;
@@ -99,8 +130,19 @@ export function mountCityScene(host, options = {}) {
     camera.right = halfWidth - shift;
     camera.left = -halfWidth - shift;
     camera.updateProjectionMatrix();
-    renderer.setSize(Math.round(width), Math.round(height), false);
-    render();
+    const size = renderer.getSize(new THREE.Vector2());
+    if (Math.abs(renderer.getPixelRatio() - ratio) > .01) renderer.setPixelRatio(ratio);
+    if (size.x !== Math.round(width) || size.y !== Math.round(height)) renderer.setSize(Math.round(width), Math.round(height), false);
+    needsRender = true;
+    render(true);
+  }
+
+  function onScroll() {
+    if (!optimized || options.pauseWhileScrolling === false || !visible) return;
+    scrolling = true;
+    cancelFrame();
+    clearTimeout(scrollTimer);
+    scrollTimer = window.setTimeout(() => { scrolling = false; syncPlayback(); }, 140);
   }
 
   function onVisibility() { syncPlayback(); }
@@ -112,6 +154,7 @@ export function mountCityScene(host, options = {}) {
     options.onError?.(new Error("WebGL context lost"));
   }
   document.addEventListener("visibilitychange", onVisibility);
+  if (optimized) window.addEventListener("scroll", onScroll, { passive: true, signal: abort.signal });
   canvas.addEventListener("webglcontextlost", onContextLost);
   const resizeObserver = new ResizeObserver(resize);
   resizeObserver.observe(host);
@@ -145,6 +188,14 @@ export function mountCityScene(host, options = {}) {
     mixer.timeScale = playbackRate;
     for (const clip of clips) mixer.clipAction(clip).setLoop(THREE.LoopRepeat, Infinity).play();
     mixer.setTime(0);
+    if (optimized) {
+      geometryStats = { ...model.userData.heroOptimization, frozenTransforms: freezeCityTransforms(model, clips) };
+      scene.updateMatrixWorld(true);
+      scene.matrixAutoUpdate = false;
+      // Compile material programs before replacing the already visible poster.
+      await renderer.compileAsync(scene, camera);
+      if (destroyed) return;
+    }
     renderer.shadowMap.needsUpdate = true;
     resize();
     syncPlayback();
@@ -155,16 +206,25 @@ export function mountCityScene(host, options = {}) {
     ready,
     get paused() { return paused; },
     setPaused(value) {
-      paused = Boolean(value);
+      value = Boolean(value);
+      if (paused === value) return;
+      paused = value;
       syncPlayback();
       options.onPauseChange?.(paused);
     },
-    setVisible(value) { visible = Boolean(value); syncPlayback(); },
+    setVisible(value) {
+      value = Boolean(value);
+      if (visible === value) return;
+      visible = value;
+      clearTimeout(scrollTimer); scrolling = false;
+      syncPlayback();
+    },
     setTime(seconds) {
       if (mixer) {
         mixer.timeScale = 1;
         mixer.setTime(seconds);
         mixer.timeScale = playbackRate;
+        needsRender = true;
         render();
       }
     },
@@ -172,6 +232,8 @@ export function mountCityScene(host, options = {}) {
       let meshes = 0, skinnedMeshes = 0;
       model?.traverse((node) => { if (node.isMesh) meshes++; if (node.isSkinnedMesh) skinnedMeshes++; });
       return { ready: Boolean(model), paused, visible, time: mixer?.time ?? 0, playbackRate,
+        optimized, targetFps, renderedFrames, scrolling, pixelRatio: renderer.getPixelRatio(),
+        drawingBuffer: { width: canvas.width, height: canvas.height }, geometry: geometryStats,
         framing: { halfHeight: camera.top, horizontalShift: -(camera.left + camera.right) / 2 },
         byteLength, meshes, skinnedMeshes, clips: clips.map(c => ({ name: c.name, duration: c.duration, tracks: c.tracks.length })),
         drawCalls: renderer.info.render.calls, triangles: renderer.info.render.triangles,
@@ -182,6 +244,7 @@ export function mountCityScene(host, options = {}) {
       if (destroyed) return;
       destroyed = true;
       abort.abort();
+      clearTimeout(scrollTimer);
       cancelFrame();
       resizeObserver.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);

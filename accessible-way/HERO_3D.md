@@ -1,5 +1,9 @@
 # Accessible Way — Kota 3D besar sebagai latar Hero
 
+> Pembaruan terbaru: Hero sekarang memutar video HD dari model kota ini.
+> Panduan aktif ada di `HERO_VIDEO_HD.md`. Kamera dan renderer 3D di bawah
+> tetap tersedia pada `city-preview.html` untuk memeriksa model sumber.
+
 Hero kini memakai kota 3D tanpa bingkai, dengan judul, deskripsi, dan CTA di
 depannya. Gradasi vertikal memenuhi tinggi Hero, dengan blur tipis yang semakin
 berkurang ke kiri. Tidak ada panel kaca atau tepian membulat; teks tetap tajam.

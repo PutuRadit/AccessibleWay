@@ -7,9 +7,9 @@ const topics = [
   { value: "kolaborasi", title: "Kolaborasi", description: "Bangun akses bersama", icon: "chat", node: "1:216" },
 ];
 const fields = [
-  { name: "name", label: "Nama Lengkap", type: "text", autocomplete: "name", placeholder: "Nama lengkap Anda", required: true, min: 2, max: 80 },
-  { name: "email", label: "Alamat Email", type: "email", autocomplete: "email", placeholder: "nama@email.com", required: true, max: 254 },
-  { name: "building", label: "Nama Gedung / Tempat", type: "text", autocomplete: "organization", placeholder: "Contoh: rumah sakit atau kampus", max: 120 },
+  { name: "name", label: "Nama Lengkap", type: "text", autocomplete: "name", placeholder: "Nama lengkap Anda", max: 80 },
+  { name: "email", label: "Alamat Email", type: "email", autocomplete: "email", placeholder: "nama@email.com", max: 254 },
+  { name: "building", label: "Nama Gedung / Tempat", type: "text", autocomplete: "organization", placeholder: "Nama gedung atau tempat", max: 120 },
   { name: "city", label: "Kota / Lokasi", type: "text", autocomplete: "address-level2", placeholder: "Kota atau lokasi Anda", max: 100 },
 ];
 
@@ -25,11 +25,9 @@ function configuredEmail() {
 function renderField(field) {
   return `
     <div class="contact__field">
-      <label for="contact-${field.name}">${field.label}${field.required ? ' <span aria-hidden="true">*</span>' : ' <span class="contact__optional">(opsional)</span>'}</label>
+      <label for="contact-${field.name}">${field.label}</label>
       <input id="contact-${field.name}" name="${field.name}" type="${field.type}" autocomplete="${field.autocomplete}"
-        placeholder="${field.placeholder}" ${field.required ? "required" : ""} ${field.min ? `minlength="${field.min}"` : ""}
-        maxlength="${field.max}" aria-describedby="contact-${field.name}-error" />
-      <p class="contact__error" id="contact-${field.name}-error" hidden></p>
+        placeholder="${field.placeholder}" required maxlength="${field.max}" />
     </div>`;
 }
 
@@ -65,39 +63,30 @@ export function renderContact() {
               ${email ? `<a class="contact__direct-email" href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a>` : ""}
             </div>
           </div>
-
           <div class="contact__panel" data-figma-node="1:227">
             <h3 class="contact__form-heading">Pesan untuk Tim Accessible Way</h3>
-            <p class="contact__form-intro">Siapkan pesan untuk pertanyaan, masukan, atau kolaborasi.</p>
+            <p class="contact__form-intro">Kirim pesan untuk pertanyaan, masukan, atau kolaborasi.</p>
             <form class="contact__form" id="contact-form" novalidate>
               <div class="contact__fields">${fields.map(renderField).join("")}</div>
               <div class="contact__field">
-                <label for="contact-message">Catatan atau Pertanyaan <span aria-hidden="true">*</span></label>
-                <textarea id="contact-message" name="message" rows="4" required minlength="10" maxlength="2000"
+                <label for="contact-message">Catatan atau Pertanyaan</label>
+                <textarea id="contact-message" name="message" rows="4" required maxlength="2000"
                   placeholder="Ceritakan pengalaman, pertanyaan, atau ide kolaborasi Anda..."
-                  aria-describedby="contact-message-error contact-message-count"></textarea>
-                <div class="contact__message-meta"><p class="contact__error" id="contact-message-error" hidden></p><span id="contact-message-count" data-contact-count>0 / 2000</span></div>
+                  aria-describedby="contact-message-count"></textarea>
+                <div class="contact__message-meta"><span id="contact-message-count" data-contact-count>0 / 2000</span></div>
               </div>
-              <p class="contact__form-status" role="alert" hidden data-contact-error-summary></p>
-              <button class="contact__submit" type="submit" data-figma-node="1:266"><img src="${iconBase}/send.svg" alt="" aria-hidden="true" /><span>Tinjau Pesan</span></button>
-              <p class="contact__form-note">* Wajib diisi. Anda dapat meninjau pesan sebelum melanjutkan.</p>
+              <button class="contact__submit" type="submit" data-figma-node="1:266"><img src="${iconBase}/send.svg" alt="" aria-hidden="true" /><span data-contact-submit-label>Kirim Pesan</span></button>
             </form>
           </div>
         </div>
       </div>
 
-      <dialog class="contact__review" aria-labelledby="contact-review-heading" aria-describedby="contact-review-description">
-        <div class="contact__review-header"><h2 id="contact-review-heading">Tinjau Pesan Anda</h2><button class="contact__close" type="button" aria-label="Tutup pratinjau pesan" data-contact-close autofocus>×</button></div>
-        <p id="contact-review-description">Periksa kembali nama, alamat email, dan isi pesan Anda.</p>
-        <label class="contact__sr-only" for="contact-draft">Draf pesan</label>
-        <textarea class="contact__draft" id="contact-draft" readonly rows="10"></textarea>
-        <p class="contact__delivery-note">${email ? `Penerima: <strong>${escapeHtml(email)}</strong>. Pesan dikirim setelah Anda menekan Kirim di aplikasi email.` : "Alamat email tim belum ditambahkan. Anda dapat menyalin draf ini; pesan belum dikirim."}</p>
-        <div class="contact__review-actions">
-          <button type="button" class="contact__copy-button" data-contact-copy>Salin Pesan</button>
-          ${email ? '<a class="contact__email-button" data-contact-email>Buka Draf Email</a>' : ""}
-          <button type="button" class="contact__edit-button" data-contact-close>Kembali ke Formulir</button>
-        </div>
-        <p class="contact__copy-status" role="status" aria-live="polite" data-contact-copy-status></p>
+      <dialog class="contact__notice" aria-labelledby="contact-notice-heading" aria-describedby="contact-notice-message">
+        <button class="contact__notice-close" type="button" aria-label="Tutup pemberitahuan" data-contact-close>×</button>
+        <span class="contact__notice-icon" aria-hidden="true" data-contact-notice-icon>i</span>
+        <h2 id="contact-notice-heading" data-contact-notice-heading></h2>
+        <p id="contact-notice-message" data-contact-notice-message></p>
+        <button class="contact__notice-confirm" type="button" data-contact-close autofocus>Mengerti</button>
       </dialog>
     </section>`;
 }
@@ -106,59 +95,113 @@ export function initContact(root) {
   const section = root.querySelector(".contact");
   if (!section) return () => {};
   const form = section.querySelector(".contact__form");
-  const dialog = section.querySelector(".contact__review");
-  const draft = section.querySelector(".contact__draft");
-  const status = section.querySelector("[data-contact-copy-status]");
-  const summary = section.querySelector("[data-contact-error-summary]");
+  const dialog = section.querySelector(".contact__notice");
+  const heading = section.querySelector("[data-contact-notice-heading]");
+  const message = section.querySelector("[data-contact-notice-message]");
+  const icon = section.querySelector("[data-contact-notice-icon]");
+  const submit = form.querySelector("button[type=submit]");
+  const submitLabel = submit.querySelector("[data-contact-submit-label]");
   const count = section.querySelector("[data-contact-count]");
   const inputs = [...form.querySelectorAll("input, textarea")];
-  const touched = new Set();
+  const controls = [...form.elements];
   const events = new AbortController();
-  let disposed = false;
+  let disposed = false, submitting = false, request = null, simulationTimer = 0, focusAfterClose = submit;
 
-  function validate(field) {
-    const value = field.value.trim();
-    let message = "";
-    if (field.required && !value) message = "Bagian ini wajib diisi.";
-    else if (field.type === "email" && value && field.validity.typeMismatch) message = "Masukkan alamat email yang valid.";
-    else if (value && field.minLength > 0 && value.length < field.minLength) message = `Masukkan setidaknya ${field.minLength} karakter.`;
-    else if (field.maxLength > 0 && value.length > field.maxLength) message = `Gunakan maksimal ${field.maxLength} karakter.`;
-    const error = section.querySelector(`#${field.id}-error`);
-    error.textContent = message;
-    error.hidden = !message;
-    if (message) field.setAttribute("aria-invalid", "true");
-    else field.removeAttribute("aria-invalid");
-    return !message;
+  function notice(title, text, state = "info", focusTarget = submit) {
+    if (disposed) return;
+    heading.textContent = title;
+    message.textContent = text;
+    icon.textContent = state === "success" ? "✓" : "i";
+    dialog.dataset.state = state;
+    focusAfterClose = focusTarget;
+    if (!dialog.open) dialog.showModal();
   }
 
-  for (const field of inputs) {
-    field.addEventListener("blur", () => { touched.add(field); validate(field); }, { signal: events.signal });
-    field.addEventListener("input", () => {
-      if (touched.has(field)) validate(field);
-      if (field.name === "message") count.textContent = `${field.value.length} / 2000`;
-      summary.hidden = true;
-    }, { signal: events.signal });
+  function setSending(value) {
+    submitting = value;
+    for (const control of controls) control.disabled = value;
+    submitLabel.textContent = value ? "Mengirim…" : "Kirim Pesan";
+    if (value) form.setAttribute("aria-busy", "true");
+    else form.removeAttribute("aria-busy");
   }
 
-  form.addEventListener("submit", event => {
+  function finishSuccess(simulated = false) {
+    form.reset();
+    count.textContent = "0 / 2000";
+    notice("Pesan terkirim", simulated
+      ? "Simulasi pengiriman berhasil. Pesan ini belum dikirim ke tim."
+      : "Terima kasih! Pesan Anda sudah diterima.", "success");
+  }
+
+  form.elements.namedItem("message").addEventListener("input", event => {
+    count.textContent = `${event.target.value.length} / 2000`;
+  }, { signal: events.signal });
+
+  form.addEventListener("submit", async event => {
     event.preventDefault();
-    const invalid = inputs.filter(field => { touched.add(field); return !validate(field); });
-    if (invalid.length) {
-      summary.textContent = "Periksa kolom yang ditandai, lalu tinjau pesan kembali.";
-      summary.hidden = false;
-      invalid[0].focus();
+    if (submitting || disposed) return;
+
+    const missing = inputs.find(field => !field.value.trim());
+    if (missing) {
+      notice("Lengkapi formulir", "Silakan lengkapi semua kolom sebelum mengirim pesan.", "info", missing);
       return;
     }
-    summary.hidden = true;
+    const email = form.elements.namedItem("email");
+    if (email.validity.typeMismatch || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+      notice("Periksa alamat email", "Masukkan alamat email yang valid sebelum mengirim pesan.", "info", email);
+      return;
+    }
+    const tooLong = inputs.find(field => field.maxLength > 0 && field.value.length > field.maxLength);
+    if (tooLong) {
+      const label = section.querySelector(`label[for="${tooLong.id}"]`).textContent;
+      notice("Periksa panjang isian", `${label} dapat diisi maksimal ${tooLong.maxLength} karakter.`, "info", tooLong);
+      return;
+    }
+
     const values = new FormData(form);
-    const topic = topics.find(item => item.value === values.get("topic"));
-    const topicTitle = (topic?.title ?? "Pertanyaan Proyek").replace("&amp;", "&");
-    const value = name => String(values.get(name) ?? "").trim();
-    draft.value = `Topik: ${topicTitle}\nNama: ${value("name")}\nEmail: ${value("email")}\nGedung / Tempat: ${value("building") || "-"}\nKota / Lokasi: ${value("city") || "-"}\n\n${value("message")}`;
-    const emailLink = section.querySelector("[data-contact-email]");
-    if (emailLink) emailLink.href = `mailto:${configuredEmail()}?subject=${encodeURIComponent(`[Accessible Way] ${topicTitle}`)}&body=${encodeURIComponent(draft.value)}`;
-    status.textContent = "";
-    if (!dialog.open) dialog.showModal();
+    const topic = String(values.get("topic") ?? "");
+    if (!topics.some(item => item.value === topic)) {
+      notice("Pilih topik pesan", "Pilih salah satu topik sebelum mengirim pesan.", "info", section.querySelector(".contact__topic-input"));
+      return;
+    }
+    if (contactConfig.mode === "simulation") {
+      setSending(true);
+      simulationTimer = window.setTimeout(() => {
+        simulationTimer = 0;
+        if (disposed) return;
+        finishSuccess(true);
+        setSending(false);
+      }, 350);
+      return;
+    }
+    const payload = Object.fromEntries(["name", "email", "building", "city", "message"].map(name => [name, String(values.get(name) ?? "").trim()]));
+    payload.topic = topic;
+    const currentRequest = new AbortController();
+    request = currentRequest;
+    const timeout = window.setTimeout(() => currentRequest.abort(), 15000);
+    setSending(true);
+    try {
+      const endpoint = String(contactConfig.endpoint ?? "").trim();
+      if (!endpoint) throw new Error("Contact endpoint is not configured");
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { Accept: "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        signal: currentRequest.signal,
+      });
+      if (!response.ok) throw new Error("Contact request was rejected");
+      const result = await response.json();
+      // A generic HTTP 200 / SPA fallback must never count as a sent message.
+      if (result?.success !== true) throw new Error("Contact request was not confirmed");
+      if (disposed) return;
+      finishSuccess();
+    } catch {
+      if (!disposed) notice("Pesan belum terkirim", "Pesan belum dapat dikirim saat ini. Silakan coba lagi nanti. Isian Anda tetap tersimpan di formulir.", "info");
+    } finally {
+      window.clearTimeout(timeout);
+      if (request === currentRequest) request = null;
+      if (!disposed) setSending(false);
+    }
   }, { signal: events.signal });
 
   for (const button of section.querySelectorAll("[data-contact-close]")) {
@@ -169,19 +212,16 @@ export function initContact(root) {
     const bounds = dialog.getBoundingClientRect();
     if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close();
   }, { signal: events.signal });
-  dialog.addEventListener("close", () => { if (!disposed) form.querySelector("button[type=submit]").focus(); }, { signal: events.signal });
-  section.querySelector("[data-contact-copy]").addEventListener("click", async () => {
-    try {
-      if (!navigator.clipboard?.writeText) throw new Error("Clipboard unavailable");
-      await navigator.clipboard.writeText(draft.value);
-      if (!disposed) status.textContent = "Pesan berhasil disalin. Pesan belum dikirim.";
-    } catch {
-      if (disposed) return;
-      draft.focus();
-      draft.select();
-      status.textContent = "Teks sudah dipilih. Gunakan perintah Salin pada perangkat Anda.";
-    }
+  dialog.addEventListener("close", () => {
+    if (!disposed && focusAfterClose?.isConnected) focusAfterClose.focus();
   }, { signal: events.signal });
 
-  return () => { disposed = true; events.abort(); if (dialog.open) dialog.close(); };
+  return () => {
+    if (disposed) return;
+    disposed = true;
+    window.clearTimeout(simulationTimer);
+    request?.abort();
+    events.abort();
+    if (dialog.open) dialog.close();
+  };
 }

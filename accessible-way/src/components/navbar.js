@@ -44,6 +44,7 @@ export function renderNavbar() {
 
 export function initNavbar(root) {
   const header = root.querySelector(".navbar");
+  const hero = root.querySelector("#beranda");
   const toggle = header.querySelector(".navbar__toggle");
   const panel = header.querySelector(".navbar__panel");
   const navigation = header.querySelector(".navbar__links");
@@ -94,10 +95,22 @@ export function initNavbar(root) {
     header.dataset.visibility = "shown";
   }
 
+  function isInHero() {
+    return hero && hero.getBoundingClientRect().bottom > header.offsetHeight;
+  }
+
   function scheduleHide() {
     window.clearTimeout(idleTimer);
+    if (disposed) return;
+    if (isInHero()) {
+      show();
+      return;
+    }
     idleTimer = window.setTimeout(() => {
-      if (disposed || isInteracting()) return;
+      if (disposed) return;
+      // A resize or return scroll can bring Hero back before this timer fires.
+      if (isInHero()) { show(); return; }
+      if (isInteracting()) return;
       header.classList.add("navbar--hidden");
       header.dataset.visibility = "hidden";
     }, IDLE_HIDE_MS);
@@ -164,8 +177,12 @@ export function initNavbar(root) {
   header.addEventListener("pointerleave", scheduleHide, { signal: events.signal });
   header.addEventListener("focusin", () => { show(); window.clearTimeout(idleTimer); }, { signal: events.signal });
   header.addEventListener("focusout", scheduleHide, { signal: events.signal });
-  const resizeObserver = new ResizeObserver(() => moveIndicator(true));
+  const resizeObserver = new ResizeObserver(entries => {
+    if (entries.some(entry => entry.target === navigation)) moveIndicator(true);
+    if (entries.some(entry => entry.target === hero)) scheduleHide();
+  });
   resizeObserver.observe(navigation);
+  if (hero) resizeObserver.observe(hero);
   document.fonts.ready.then(() => { if (!disposed) moveIndicator(true); });
   handleViewportChange();
   updateSection();

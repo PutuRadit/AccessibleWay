@@ -1,88 +1,112 @@
 # Accessible Way — Contact
 
-Bagian Contact mengikuti susunan Figma `1:186`: informasi di kiri dan kartu
-formulir putih di kanan, dengan tema biru–putih, Plus Jakarta Sans, Inter,
-bidang isian biru muda, dan lima ikon asli yang disimpan lokal.
+Contact memakai tema biru–putih dengan informasi dan pilihan topik di kiri,
+serta kartu formulir di kanan.
 
-Isi disesuaikan dengan proyek Accessible Way: pertanyaan proyek, saran dan
-masukan, serta kolaborasi. Kontak contoh, klaim layanan audit, hotline,
-Juru Bahasa Isyarat, dan janji waktu balasan pada desain tidak digunakan
-sebagai layanan nyata tim.
+## Memasang pembaruan
 
-## Memasang di atas versi sebelumnya
+Dari `WebDev/accessible-way/` dalam ZIP, salin tiga berkas ini ke lokasi yang
+sama pada proyek yang sudah berjalan:
 
-1. Hentikan Vite, lalu ekstrak ZIP ke folder sementara.
-2. Dari `WebDev/accessible-way/`, salin ke lokasi yang sama pada proyekmu:
+- `src/components/contact.js`
+- `src/styles/contact.css`
+- `src/config/contact.js`
 
-   - `src/components/contact.js`
-   - `src/config/contact.js`
-   - `src/styles/contact.css`
-   - `src/main.js`
-   - `src/pages/landing.js`
-   - `src/motion/landing-motion.js`
-   - Folder `public/assets/icons/contact/` beserta kelima SVG di dalamnya
+Lalu jalankan `npm.cmd run dev` dan muat ulang halaman dengan Ctrl+F5.
+Tidak ada dependensi baru. Pengaturan kamera, teks How It Works/About,
+video Hero, foto tim, dan animasi navbar tidak perlu disalin ulang.
 
-3. Jalankan `npm.cmd run dev`, lalu tekan Ctrl+F5.
-4. Klik Contact pada navbar. Indikator biru dan halaman berpindah ke `#kontak`.
+Jika pembaruan popup sebelumnya sudah terpasang, cukup perbarui
+`src/components/contact.js` dan `src/config/contact.js` untuk mengaktifkan
+mode simulasi ini.
 
-Tidak ada dependensi baru. Pembaruan ini tidak memerlukan penyalinan file
-kamera, model 3D, atau komponen How It Works.
+## Perilaku formulir
 
-## Mengisi alamat email penerima
+- Label tidak memakai bintang atau tulisan opsional.
+- Tidak ada pemeriksaan saat mengetik atau berpindah kolom. Formulir tetap
+  netral tanpa garis merah dan pesan kesalahan di bawah isian.
+- Tombol bertuliskan **Kirim Pesan** dan tetap dapat diklik saat formulir kosong.
+- Saat tombol ditekan, nama, email, gedung/tempat, kota/lokasi, dan pesan
+  harus berisi teks. Spasi saja dianggap kosong.
+- Jika ada isian kosong, popup kecil meminta pengguna melengkapi formulir.
+  Sesudah ditutup, fokus berpindah ke kolom pertama yang belum lengkap.
+- Email diperiksa formatnya ketika pengguna mengirim. Batas panjang isian
+  tetap berlaku, tetapi tidak ada syarat minimum 10 karakter untuk pesan.
+- Selama permintaan dikirim, tombol menampilkan **Mengirim…** dan kontrol
+  dinonaktifkan sementara untuk mencegah pengiriman berulang.
+- Dalam mode simulasi, formulir lengkap menampilkan popup **Pesan terkirim**
+  dengan keterangan bahwa pengiriman masih berupa simulasi dan pesan belum
+  dikirim ke tim. Tidak ada permintaan pengiriman ke jaringan atau penyimpanan
+  data. Sesudah simulasi berhasil, isian dan penghitung karakter direset.
+- Dalam mode API, popup berhasil baru tampil setelah API mengonfirmasi
+  penerimaan. Isian dan penghitung karakter kemudian direset.
+- Jika koneksi gagal, respons tidak mengonfirmasi penerimaan, atau permintaan
+  melewati 15 detik, popup **Pesan belum terkirim** tampil. Isian tidak dihapus.
+- Popup dapat ditutup dengan tombol, Escape, atau klik di luar popup.
 
-Alamat email tim belum diberikan. Isi satu pengaturan di
-`src/config/contact.js`:
+## Mengaktifkan pengiriman nyata
+
+ZIP ini memakai **mode simulasi** sesuai kebutuhan demo frontend:
+
+```js
+mode: "simulation",
+```
+
+Mode ini tidak membutuhkan backend atau alamat API. Semua pemeriksaan isian
+tetap dipakai, tetapi tidak ada data yang dikirim ke tim atau disimpan.
+
+Untuk pengiriman nyata, ganti mode menjadi `"api"` dan isi endpoint layanan
+yang benar. Pada mode API, endpoint kosong tetap menampilkan popup belum
+terkirim dan mempertahankan isian; kegagalan API tidak diganti simulasi.
+
+Isi `src/config/contact.js` setelah backend siap:
 
 ```js
 export const contactConfig = Object.freeze({
-  email: "alamat-email-tim-yang-benar",
+  mode: "api",
+  email: "", // Kontak email publik bila ingin ditampilkan.
+  endpoint: "/api/contact", // Ganti dengan rute API penerima yang sebenarnya.
 });
 ```
 
-Ganti teks di atas dengan alamat email asli. Alamat yang valid akan tampil
-di Contact dan mengaktifkan tombol **Buka Draf Email** pada pratinjau.
-Alamat ini bersifat publik; tidak memerlukan kunci API atau kata sandi.
+Alamat di atas adalah contoh kontrak integrasi; ZIP ini tidak menyediakan
+handler `/api/contact`. Jangan menaruh kata sandi atau kunci API rahasia pada
+konfigurasi frontend.
 
-Alur yang tersedia:
+Frontend mengirim **POST** dengan `Content-Type: application/json` dan data:
 
-1. Pilih topik pesan.
-2. Isi nama, email, serta catatan/pertanyaan. Gedung/tempat dan kota opsional.
-3. Klik **Tinjau Pesan**. Formulir memeriksa data dan membuka pratinjau.
-4. Salin pesan, atau buka draf di aplikasi email jika penerima sudah diisi.
-5. Pengunjung sendiri menekan Kirim di aplikasi email.
+```json
+{
+  "topic": "masukan",
+  "name": "Nama pengguna",
+  "email": "pengguna@example.com",
+  "building": "Nama tempat",
+  "city": "Nama kota",
+  "message": "Isi pesan pengguna"
+}
+```
 
-Formulir belum terhubung ke server pengiriman email. Membuka pratinjau atau
-menyalin pesan tidak mengirimkannya. Saat penerima masih kosong, pratinjau
-menjelaskan bahwa alamat belum ditambahkan dan pesan belum dikirim.
-Isian tidak dikirim melalui jaringan atau disimpan ke penyimpanan browser
-oleh komponen ini.
+Backend harus memeriksa data, menerima pesan, lalu membalas status HTTP 2xx
+dan JSON berikut untuk menampilkan popup berhasil:
 
-## Pengaturan isi, desain, dan animasi
+```json
+{ "success": true }
+```
+
+Respons HTML dari fallback SPA, JSON tanpa `success: true`, respons HTTP gagal,
+dan kegagalan koneksi tidak dianggap sebagai pesan terkirim. Pesan error dari
+server tidak dimasukkan langsung ke halaman.
+
+## Pengaturan
 
 | Bagian | File |
 | --- | --- |
-| Alamat email penerima | `src/config/contact.js` |
-| Judul, paragraf, topik, formulir, pratinjau | `src/components/contact.js` |
-| Warna, jarak, ukuran isian, hover, responsivitas | `src/styles/contact.css` |
-| Animasi scroll | Empat entri `.contact__…` di `src/motion/landing-motion.js` |
-| Ikon Figma asli | `public/assets/icons/contact/` |
+| Isi, pemeriksaan saat mengirim, popup, dan alur pengiriman | `src/components/contact.js` |
+| Tampilan formulir dan popup kecil | `src/styles/contact.css` |
+| API penerima dan kontak email publik | `src/config/contact.js` |
+| Animasi muncul saat scroll | `src/motion/landing-motion.js` |
 
-Formulir memiliki label, pesan kesalahan per kolom, fokus ke isian yang
-perlu diperbaiki, penghitung karakter, dan pratinjau yang dapat ditutup
-dengan Escape. Topik dapat dipilih melalui keyboard. Reduced motion
-menampilkan isi tanpa animasi. Pembersihan event mengikuti siklus HMR Vite.
-
-## Pengaturan foto tim terbaru
-
-ZIP juga memuat nilai pembingkaian yang diberikan terakhir:
-
-```css
-.about__avatar--anisa { --portrait-width: 125%; --portrait-left: -25%; --portrait-top: -37%; }
-.about__avatar--putu { --portrait-width: 125%; --portrait-left: -13%; --portrait-top: -24%; }
-.about__avatar--farel { --portrait-width: 170%; --portrait-left: -10%; --portrait-top: -8%; }
-```
-
-Jika proyek lokal memiliki penyesuaian CSS lain, cukup terapkan tiga aturan
-tersebut pada `src/styles/about.css`.
-
-Referensi: https://www.figma.com/design/DxDcFrkQeM7iDrCZZLq1yR/Untitled?node-id=1-186
+Label tetap terhubung ke isian, semua isian diumumkan sebagai diperlukan
+untuk pengiriman oleh pembaca layar, dan pemeriksaan bawaan browser digantikan
+popup melalui `novalidate`. Preferensi Reduce Motion mematikan animasi popup.
+Event dan permintaan yang berjalan dibersihkan saat komponen dilepas/HMR.
