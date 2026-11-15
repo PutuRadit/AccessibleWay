@@ -19,7 +19,7 @@ export function renderHero() {
             maupun sekitar gedung sesuai kebutuhan Anda.
           </p>
           <div class="hero__actions" data-hero-reveal>
-            <a class="hero__button hero__button--primary" href="${import.meta.env.BASE_URL}explore">
+            <a class="hero__button hero__button--primary" href="${import.meta.env.BASE_URL}explore/">
               <img src="${assetBase}/icons/compass.svg" alt="" />
               <span>Find Your Way</span>
             </a>

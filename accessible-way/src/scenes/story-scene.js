@@ -10,7 +10,7 @@ import { HOUSE_FRAME, HOSPITAL_FRAME, HOSPITAL_YAW, HOUSE_END, ARRIVAL_DISTANCE,
 const modelUrl = `${import.meta.env.BASE_URL}assets/models/accessible-story.glb`;
 // Front/elevated room view from the supplied reference. The hospital view is
 // aligned to its doorway, rather than viewing the building from its right side.
-const FRONT_VIEW = new THREE.Vector3(8, 26, 34).normalize();
+const FRONT_VIEW = new THREE.Vector3(0, 16, 30).normalize();
 const SHORT_TRAVEL_METRES = 2.4;
 const ARRIVAL_TRAVEL_METRES = 2.1;
 // Keep the indoor journey visible from the entrance to the pharmacy without
@@ -108,7 +108,7 @@ export function mountStoryScene(host, options = {}) {
     }
     const desktop = matchMedia("(min-width: 980px)").matches;
     const availableAspect = width * (desktop ? .52 : .92) / height;
-    state.halfHeight = Math.max(vertical, horizontal / availableAspect) * 1.08;
+    state.halfHeight = Math.max(vertical, horizontal / availableAspect) * 0.90;
     const halfWidth = state.halfHeight * width / height;
     const shift = desktop ? halfWidth * .44 : 0;
     camera.left = -halfWidth + shift;

@@ -1,7 +1,7 @@
 import "./styles/global.css";
 const app = document.querySelector("#app");
 const path = window.location.pathname.replace(import.meta.env.BASE_URL, "").replace(/^\/+|\/+$/g, "");
-const inferred = /^(login|register)(\/index\.html)?$/.exec(path)?.[1];
+const inferred = /^(login|register|explore|indoor)(\/index\.html)?$/.exec(path)?.[1];
 const page = document.body.dataset.page ?? inferred ?? "landing";
 let cleanup = () => {}, disposed = false;
 
@@ -11,6 +11,16 @@ async function mount() {
     if (disposed) return;
     app.innerHTML = renderAuth(page);
     cleanup = initAuth(app, page);
+  } else if (page === "indoor") {
+    const { renderIndoor, initIndoor } = await import("./pages/indoor.js");
+    if (disposed) return;
+    app.innerHTML = renderIndoor();
+    cleanup = initIndoor(app);
+  } else if (page === "explore") {
+    const { renderExplore, initExplore } = await import("./pages/explore.js");
+    if (disposed) return;
+    app.innerHTML = renderExplore();
+    cleanup = initExplore(app);
   } else {
     const { renderLanding, initLanding } = await import("./pages/landing.js");
     if (disposed) return;

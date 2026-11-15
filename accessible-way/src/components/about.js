@@ -45,9 +45,9 @@ export function renderAbout() {
                 lebih mudah, mandiri, dan nyaman.
               </p>
               <ul class="about__scope" aria-label="Fokus proyek">
-                <li>Studi kasus rumah sakit</li>
-                <li>3 lantai</li>
-                <li>Akses lift &amp; ramp</li>
+                <li>Navigasi Dalam Gedung</li>
+                <li>Informasi AKsesibilitas</li>
+                <li>Mobilitas Mandiri</li>
               </ul>
             </div>
             <figure class="about__showcase">
@@ -60,11 +60,6 @@ export function renderAbout() {
                   <span>Ruang untuk semua.<small>Bergerak bersama, lebih mandiri.</small></span>
                 </p>
               </div>
-              <figcaption class="about__photo-credit">
-                <span>Foto ilustrasi kolaborasi inklusif.</span>
-                <a href="https://www.pexels.com/photo/people-sitting-at-the-table-8127703/"
-                  target="_blank" rel="noopener noreferrer" aria-label="Sumber foto: Ivan S di Pexels, buka tab baru">Ivan S / Pexels <span aria-hidden="true">↗</span></a>
-              </figcaption>
             </figure>
           </div>
 
@@ -78,7 +73,7 @@ export function renderAbout() {
             </article>
             <article class="about__story-card about__story-card--mission">
               <p class="about__eyebrow"><span aria-hidden="true">02</span> Misi kami</p>
-              <h3>Lebih mudah. Lebih mandiri. Lebih nyaman.</h3>
+              <h3>Lebih mudah, Lebih mandiri, Lebih nyaman.</h3>
               <p>Kami mengembangkan teknologi navigasi dalam ruangan yang inklusif untuk
                 mendukung lingkungan yang lebih mudah diakses dan kemandirian setiap
                 individu dalam menjalani kunjungannya.</p>
